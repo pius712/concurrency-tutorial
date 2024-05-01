@@ -1,8 +1,8 @@
-rootProject.name = "kt-boilerplate"
+rootProject.name = "concurrency-tutorial"
 
 include(
-    "boilerplate-core-api",
-    "boilerplate-common",
+    "concurrency-core-api",
+    "concurrency-common",
     "storage:db-core",
     "infra:logging",
     "clients:example"
