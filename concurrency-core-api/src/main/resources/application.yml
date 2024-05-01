@@ -9,27 +9,3 @@ spring:
 logging:
   level:
     root: info
----
-spring:
-  config:
-    activate:
-      on-profile: local-dev
-
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-
----
-spring:
-  config:
-    activate:
-      on-profile: staging
-
-
----
-spring:
-  config:
-    activate:
-      on-profile: live
