@@ -1,9 +1,9 @@
 package com.pius.concurrency.core.domain.feeding
 
-import com.pius.concurrency.pet.v1.FoodEntity
-import com.pius.concurrency.pet.v1.FoodRepository
-import com.pius.concurrency.pet.v1.PetEntity
-import com.pius.concurrency.pet.v1.PetRepository
+import com.pius.concurrency.pet.v1.FoodEntityV1
+import com.pius.concurrency.pet.v1.FoodRepositoryV1
+import com.pius.concurrency.pet.v1.PetEntityV1
+import com.pius.concurrency.pet.v1.PetRepositoryV1
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -17,8 +17,8 @@ import java.util.concurrent.Executors
 @SpringBootTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class FeedingServiceV0Test(
-    private val petRepository: PetRepository,
-    private val foodRepository: FoodRepository,
+    private val petRepository: PetRepositoryV1,
+    private val foodRepositoryV1: FoodRepositoryV1,
     private val feedingService: FeedingServiceV0,
 ) {
 
@@ -27,9 +27,9 @@ class FeedingServiceV0Test(
 
     @BeforeEach
     fun setUp() {
-        val petEntity = petRepository.save(PetEntity(power = 0))
-        foodRepository.save(FoodEntity(petId = petEntity.id!!, count = initialFood))
-        petId = petEntity.id!!
+        val petEntityV1 = petRepository.save(PetEntityV1(power = 0))
+        foodRepositoryV1.save(FoodEntityV1(petId = petEntityV1.id!!, count = initialFood))
+        petId = petEntityV1.id!!
     }
 
     @AfterEach

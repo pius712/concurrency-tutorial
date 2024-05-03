@@ -1,28 +1,26 @@
 package com.pius.concurrency.core.domain.feeding
 
-import com.pius.concurrency.pet.v1.FoodRepository
-import com.pius.concurrency.pet.v1.PetRepository
-import jakarta.transaction.Transactional
-import org.springframework.data.repository.findByIdOrNull
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class FeedingServiceV3(
-    private val foodRepository: FoodRepository,
-    private val petRepository: PetRepository,
+    private val feedingExecutor: FeedingExecutorV3,
 ) {
+    val logger = LoggerFactory.getLogger(javaClass)
 
-    // redis 락
-    @Transactional
+    // table unique index
     fun feed(
         petId: Long,
     ) {
-        val foodEntity = foodRepository.findByPetId(petId) ?: throw RuntimeException("Food not found")
-        if (foodEntity.count <= 0) return;
-
-        val petEntity = petRepository.findByIdOrNull(petId) ?: throw RuntimeException("Pet not found")
-        foodEntity.count -= 1
-        petEntity.power += 1;
+        while (true) {
+            try {
+                feedingExecutor.feed(petId)
+                return
+            } catch (e: Exception) {
+                logger.error("Failed to feed petId: $petId", e)
+                Thread.sleep(500)
+            }
+        }
     }
-
 }
