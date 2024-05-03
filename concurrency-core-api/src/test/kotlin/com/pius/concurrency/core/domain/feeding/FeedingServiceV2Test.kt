@@ -4,7 +4,6 @@ import com.pius.concurrency.pet.v2.FoodEntityV2
 import com.pius.concurrency.pet.v2.FoodRepositoryV2
 import com.pius.concurrency.pet.v2.PetEntityV2
 import com.pius.concurrency.pet.v2.PetRepositoryV2
-import jakarta.transaction.Transactional
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,9 +16,9 @@ import java.util.concurrent.Executors
 
 @SpringBootTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-// 여기 부분이 중요합니다. @Transactional 어노테이션을 붙이면 테스트가 실패합니다.
-// 여기 낙관적 락 내부에서 에러 발생시, 이 트랜잭션
-@Transactional
+// transactional 어노테이션 붙이면, 커밋하기 전에
+// 다른 thread 에서 데이터를 접근하지 못해서 실패함.
+//@Transactional
 
 class FeedingServiceV2Test(
     private val petRepository: PetRepositoryV2,
