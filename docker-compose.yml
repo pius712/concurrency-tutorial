@@ -11,3 +11,9 @@ services:
       - MYSQL_ROOT_PASSWORD=test
     ports:
       - '3306:3306'
+
+  concurrency-redis:
+    image: redis:6.0.9
+    command: redis-server --requirepass test
+    ports:
+      - '6379:6379'
