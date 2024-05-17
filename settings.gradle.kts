@@ -4,6 +4,7 @@ include(
     "concurrency-core-api",
     "concurrency-common",
     "storage:db-core",
+    "storage:db-redis",
     "infra:logging",
     "clients:example"
 )

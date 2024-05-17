@@ -3,7 +3,7 @@ spring:
     import:
       - example-client.yml
       - db-core.yml
-
+      - db-redis.yml
   application:
     name: hello-spring-api
 logging:
