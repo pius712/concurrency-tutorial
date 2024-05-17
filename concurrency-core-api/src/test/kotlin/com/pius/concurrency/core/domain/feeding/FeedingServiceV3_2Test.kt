@@ -10,6 +10,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.TestConstructor
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
+import java.util.concurrent.ThreadPoolExecutor
 
 
 @SpringBootTest
@@ -43,8 +44,8 @@ class FeedingServiceV3_2Test(
         val clickRequestCount = 130
 
         val latch = CountDownLatch(clickRequestCount)
-        val executorService = Executors.newFixedThreadPool(32)
-
+        val executorService = Executors.newFixedThreadPool(32) as ThreadPoolExecutor
+        
         for (i in 1..clickRequestCount) {
             executorService.execute {
                 try {

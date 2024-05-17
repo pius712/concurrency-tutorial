@@ -12,6 +12,7 @@ class FeedingServiceV3_2(
 
     val logger = LoggerFactory.getLogger(javaClass)
 
+    // table unique lock: 잘못된 예시
     // 아, 테스트 스레드가 안끝나는 이유가
     // 아래 release 에서 에러가 나서, latch.countDown 이 호출이 안되서 그럼
     fun feed(

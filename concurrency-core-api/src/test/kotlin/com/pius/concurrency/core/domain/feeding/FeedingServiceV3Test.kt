@@ -43,7 +43,7 @@ class FeedingServiceV3Test(
         val executorService = Executors.newFixedThreadPool(32)
 
         for (i in 1..clickRequestCount) {
-            executorService.execute {
+            executorService.submit {
                 feedingService.feed(petId!!)
                 latch.countDown()
             }
