@@ -1,15 +1,17 @@
 package com.pius.concurrency.core.domain.feeding
 
-import com.pius.concurrency.pet.v1.FoodRepositoryV1
-import com.pius.concurrency.pet.v1.PetRepositoryV1
+import com.pius.concurrency.RedisLock
+import com.pius.concurrency.pet.v4.FoodRepositoryV4
+import com.pius.concurrency.pet.v4.PetRepositoryV4
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
 class FeedingServiceV4(
-    private val foodRepositoryV1: FoodRepositoryV1,
-    private val petRepositoryV1: PetRepositoryV1,
+    private val foodRepositoryV4: FoodRepositoryV4,
+    private val petRepositoryV4: PetRepositoryV4,
+    private val redisLock: RedisLock,
 ) {
 
     // redis 락
@@ -17,12 +19,22 @@ class FeedingServiceV4(
     fun feed(
         petId: Long,
     ) {
-        val foodEntity = foodRepositoryV1.findByPetId(petId) ?: throw RuntimeException("Food not found")
-        if (foodEntity.count <= 0) return;
 
-        val petEntity = petRepositoryV1.findByIdOrNull(petId) ?: throw RuntimeException("Pet not found")
-        foodEntity.count -= 1
-        petEntity.power += 1;
+        try {
+            while (!redisLock.lock(petId.toString(), "1")) {
+                Thread.sleep(500)
+            }
+            val foodEntity = foodRepositoryV4.findByPetId(petId) ?: throw RuntimeException("Food not found")
+            if (foodEntity.count <= 0) return;
+
+            val petEntity = petRepositoryV4.findByIdOrNull(petId) ?: throw RuntimeException("Pet not found")
+            foodEntity.count -= 1
+            petEntity.power += 1;
+        } finally {
+            redisLock.unlock(petId.toString())
+        }
+
+
     }
 
 }
