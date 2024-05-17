@@ -8,15 +8,17 @@ import java.time.Duration
 class RedisLock(
     private val redisTemplate: StringRedisTemplate
 ) {
-
     fun lock(key: String, value: String): Boolean {
         return redisTemplate.opsForValue().setIfAbsent(
             key, value,
-            Duration.ofSeconds(10)
+            Duration.ofSeconds(5)
         )!!
     }
 
-    fun unlock(key: String) {
-        redisTemplate.delete(key)
+    fun unlock(key: String, value: String) {
+        val saved = redisTemplate.opsForValue().get(key)
+        if (saved == value) {
+            redisTemplate.delete(key)
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.pius.concurrency.pet.v4.PetRepositoryV4
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class FeedingServiceV4(
@@ -20,8 +21,9 @@ class FeedingServiceV4(
         petId: Long,
     ) {
 
+        val uuid = UUID.randomUUID().toString()
         try {
-            while (!redisLock.lock(petId.toString(), "1")) {
+            while (!redisLock.lock(petId.toString(), uuid)) {
                 Thread.sleep(500)
             }
             val foodEntity = foodRepositoryV4.findByPetId(petId) ?: throw RuntimeException("Food not found")
@@ -31,10 +33,7 @@ class FeedingServiceV4(
             foodEntity.count -= 1
             petEntity.power += 1;
         } finally {
-            redisLock.unlock(petId.toString())
+            redisLock.unlock(petId.toString(), uuid)
         }
-
-
     }
-
 }

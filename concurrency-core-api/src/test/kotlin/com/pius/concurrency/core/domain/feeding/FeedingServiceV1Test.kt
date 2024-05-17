@@ -55,6 +55,8 @@ class FeedingServiceV1Test(
         // 테스트 스레드 대기
         latch.await()
         val pet = petRepositoryV1.findByIdOrNull(petId!!) ?: throw RuntimeException("Pet not found")
+        val food = foodRepositoryV1.findByIdOrNull(petId!!) ?: throw RuntimeException("food not found")
         Assertions.assertThat(pet.power).isEqualTo(initialFood)
+        Assertions.assertThat(food.count).isEqualTo(0)
     }
 }

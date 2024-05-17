@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class FeedingServiceV0(
-    private val foodRepositoryV1: FoodRepositoryV0,
+    private val foodRepository: FoodRepositoryV0,
     private val petRepository: PetRepositoryV0,
 ) {
 
@@ -17,7 +17,7 @@ class FeedingServiceV0(
     fun feed(
         petId: Long,
     ) {
-        val foodEntity = foodRepositoryV1.findByPetId(petId) ?: throw RuntimeException("Food not found")
+        val foodEntity = foodRepository.findByPetId(petId) ?: throw RuntimeException("Food not found")
         if (foodEntity.count <= 0) return;
 
         val petEntity = petRepository.findByIdOrNull(petId) ?: throw RuntimeException("Pet not found")

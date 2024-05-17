@@ -7,7 +7,6 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "food_lock", indexes = [Index(columnList = "lockKey", unique = true)])
-
 data class FoodLockEntity(
     val lockKey: String
 ) : BaseEntity()
